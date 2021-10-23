@@ -12,7 +12,7 @@ public class Memory {
     private static List<PCB> pcbList = new ArrayList<>();
     private  LinkedList<MemoryBlock> blocks;  //链式存储
 
-    private static int MEMORY_SIZE =521;
+    private static int MEMORY_SIZE =511;
 
     static{memory = new Memory();}
 

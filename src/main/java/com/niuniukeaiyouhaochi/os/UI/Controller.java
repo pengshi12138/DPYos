@@ -2,27 +2,36 @@ package com.niuniukeaiyouhaochi.os.UI;
 
 
 import com.niuniukeaiyouhaochi.os.CPU.CPU;
+import com.niuniukeaiyouhaochi.os.Listener.DragUtil;
 import com.niuniukeaiyouhaochi.os.ProcessManager.Process;
 import com.niuniukeaiyouhaochi.os.ProcessManager.ProcessController;
 import com.niuniukeaiyouhaochi.os.device.Device;
 import com.niuniukeaiyouhaochi.os.device.DeviceController;
+import com.niuniukeaiyouhaochi.os.memory.Address;
 import com.niuniukeaiyouhaochi.os.memory.MemoryBlock;
 import com.niuniukeaiyouhaochi.os.memory.MemoryController;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -204,6 +213,22 @@ public class Controller implements Initializable {
 	@FXML
 	private AnchorPane DC;
 
+	@FXML
+	private AnchorPane top;
+
+	@FXML
+	private ImageView backIcon;
+
+	@FXML
+	private ImageView outIcon;
+
+	@FXML
+	private StackPane mainPane;
+
+	@FXML
+	private BorderPane root;
+
+
 	private TimerChart tc;
 	private static List<Label> labels = new ArrayList<>();
 	private static Color DefaultColor = Color.rgb(215, 215,215);
@@ -213,8 +238,16 @@ public class Controller implements Initializable {
 	private static List<Label> InterrupterLabels = new ArrayList<>();
 	private static List<Label> ReadyLabels = new ArrayList<>();
 	private static List<Label> BlockedLabels = new ArrayList<>();
-	private static Thread LabelThread; 										// 面板CPU和队列面板的进程
-	private static Thread LabelThread1;										// 设备面板加载
+	private static Thread LabelThread; 														// 面板CPU和队列面板的进程
+	private static Thread LabelThread1;														// 设备使用面板记载
+	private static Thread LabelThread2;														// 正在运行的进程加载面板
+	private static DeviceController deviceController = DeviceController.getInstance();		// 设备控制器
+	private static ProcessController processController = ProcessController.getInstance();	// 进程控制器
+
+
+	Process lastProcess = null;
+	Process process = null;
+	// 设备面板加载
 	@FXML
 	void start(ActionEvent event) {
 		if (!CPU.getInstance().isRunning()) {
@@ -224,6 +257,7 @@ public class Controller implements Initializable {
 			try {
 				LabelThread.notify();
 				LabelThread1.notify();
+				LabelThread2.notify();
 			} catch (Exception e) {
 				System.out.println("标签线程已经启动了");
 			}
@@ -238,6 +272,7 @@ public class Controller implements Initializable {
 		tc.reset();
 		LabelThread.interrupt();
 		LabelThread1.interrupt();
+		LabelThread2.interrupt();
 	}
 
 
@@ -264,6 +299,26 @@ public class Controller implements Initializable {
 		}
 	}
 
+
+	@FXML
+	void back(MouseEvent event) {
+
+	}
+
+
+	/**
+	 * description 程序退出
+	 * param void
+	 * return void
+	 * author pc
+	 * createTime 2021/10/23
+	 **/
+	@FXML
+	void out(MouseEvent event) {
+		Stage stage = (Stage) top.getScene().getWindow();
+		stage.close();
+	}
+
 	/**
 	 * description 更新时间片完成度
 	 * param
@@ -273,6 +328,7 @@ public class Controller implements Initializable {
 	 **/
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+
 		XYChart.Series way1 = new XYChart.Series();
 		XYChart.Series way2 = new XYChart.Series();
 		XYChart.Series way3 = new XYChart.Series();
@@ -300,7 +356,7 @@ public class Controller implements Initializable {
 		}
 
 		LabelThread = new Thread(() -> {
-			ProcessController processController = ProcessController.getInstance();
+
 			while (true) {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -338,7 +394,7 @@ public class Controller implements Initializable {
 
 		// 多线程加载面板
 		LabelThread1 = new Thread(() -> {
-			DeviceController deviceController = DeviceController.getInstance();
+
 			while (true) {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -400,11 +456,50 @@ public class Controller implements Initializable {
 		});
 		LabelThread1.setDaemon(true);
 
+
+		LabelThread2 = new Thread(() -> {
+			while (true) {
+				 process = processController.getRunningProcess();
+				 Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+
+						if (process == processController.getHangOutProcess()) {
+							return;
+						}
+						if (lastProcess == null) {
+							lastProcess = process;
+						}
+						for (int i = lastProcess.getAddress().getStartAddress();
+							 i <= lastProcess.getAddress().getEndAddress(); i++) {
+							labels.get(i).setBorder(null);
+						}
+						for (int i = process.getAddress().getStartAddress();
+							 i <= process.getAddress().getEndAddress(); i++) {
+							labels.get(i).setBorder(new Border(new BorderStroke(Paint.valueOf("#FB0D11"),
+									BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+						}
+						lastProcess = process;
+					}
+				});
+
+				try {
+					Thread.sleep(50L);
+				} catch (Exception e) {
+
+				}
+			}
+		});
+		LabelThread2.setDaemon(true);
+
+
 		tc = new TimerChart(this);
 		// 每隔0.5 s更新
 		tc.setPeriod(Duration.seconds(0.5));
 		LabelThread.start();
 		LabelThread1.start();
+		LabelThread2.start();
+
 		x.setLowerBound(0.0D);
 		x.setUpperBound(10.0D);
 		y.setLowerBound(0.0D);
@@ -432,6 +527,29 @@ public class Controller implements Initializable {
 			}
 		});
 		MemoryInit();
+		addListener();
+	}
+
+	void addListener(){
+
+		// 添加窗体拖动
+		DragUtil.addDragListener(ProcessMain.LoginStage, top);
+
+		// 添加退出程序按钮
+		outIcon.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				outIcon.setCursor(Cursor.HAND);
+			}
+		});
+
+		// 添加返回按钮
+		backIcon.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				backIcon.setCursor(Cursor.HAND);
+			}
+		});
 	}
 
 	/**

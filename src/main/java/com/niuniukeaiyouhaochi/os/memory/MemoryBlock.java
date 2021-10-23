@@ -24,8 +24,8 @@ public class MemoryBlock {
     }
 
     public MemoryBlock(int startPosition, int length, boolean isEmpty, String PID){
-        address = new Address(startPosition, startPosition + length);
-        this.endPosition = startPosition + length;
+        address = new Address(startPosition, startPosition + length - 1);
+        this.endPosition = startPosition + length - 1;
         this.length = length;
         this.isEmpty = isEmpty;
         this.PID = PID;

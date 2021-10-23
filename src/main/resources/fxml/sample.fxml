@@ -17,12 +17,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="600.0" maxWidth="1200.0" minHeight="600.0" minWidth="1200.0" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../css/sample.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.niuniukeaiyouhaochi.os.UI.Controller">
+<StackPane fx:id="mainPane" maxHeight="750.0" maxWidth="1337.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1337.0" styleClass="root" stylesheets="@../css/sample.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.niuniukeaiyouhaochi.os.UI.Controller">
    <children>
-      <BorderPane prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="root" maxHeight="650.0" maxWidth="1237.0" prefHeight="650.0" prefWidth="1237.0" styleClass="filletPane" stylesheets="@../css/sample.css">
          <left>
             <AnchorPane maxHeight="600.0" maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="300.0" BorderPane.alignment="CENTER">
                <children>
@@ -37,12 +38,14 @@
                            <styleClass>
                               <String fx:value="btn-primary" />
                               <String fx:value="btn" />
-                           </styleClass></Button>
+                           </styleClass>
+                        </Button>
                         <Button fx:id="stopStart" layoutX="156.6" layoutY="64.0" mnemonicParsing="false" onAction="#stop" prefHeight="30.0" prefWidth="70.0" text="暂停">
                            <styleClass>
                               <String fx:value="btn-success" />
                               <String fx:value="btn" />
-                           </styleClass></Button>
+                           </styleClass>
+                        </Button>
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="350.0">
@@ -132,7 +135,7 @@
          <center>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0">
                      <children>
                         <Label alignment="CENTER" prefHeight="25.0" prefWidth="600.0" text="内存块分布情况" AnchorPane.topAnchor="2.0">
                            <font>
@@ -142,7 +145,7 @@
                         <AnchorPane fx:id="ProcessBlock" prefHeight="275.0" prefWidth="547.0" AnchorPane.leftAnchor="26.5" AnchorPane.topAnchor="30.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0">
                      <children>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="600.0" AnchorPane.topAnchor="330.0">
                            <children>
@@ -474,8 +477,29 @@
                         </Button>
                      </children>
                   </AnchorPane>
-               </children></AnchorPane>
+               </children>
+            </AnchorPane>
          </right>
+         <top>
+            <AnchorPane prefHeight="50.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane fx:id="top" prefHeight="50.0" prefWidth="1237.0">
+                     <children>
+                        <ImageView fx:id="backIcon" fitHeight="25.0" fitWidth="25.0" layoutX="26.0" layoutY="13.0" onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/back.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="outIcon" fitHeight="30.0" fitWidth="30.0" layoutX="1193.0" layoutY="10.0" onMouseClicked="#out" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/cancel.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </top>
       </BorderPane>
    </children>
-</AnchorPane>
+</StackPane>

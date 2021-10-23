@@ -50,7 +50,7 @@ public class MemoryController {
 					memoryController.myMemoryBlockList.get(i).getAddress().getStartAddress();
 			memoryController.myMemoryBlockList.get(i).getAddress().setStartAddress(start);
 			memoryController.myMemoryBlockList.get(i).getAddress().setEndAddress(start+length);
-			start=start+length;
+			start=start+length+1;
 		}
 		Controller.MemoryRefresh();
 	}
@@ -76,24 +76,24 @@ public class MemoryController {
 	{
 		int start = 0,end;
 		for(int i = 0; i < myMemoryBlockList.size(); i++) {
-			end = myMemoryBlockList.get(i).getStartPosition();
-			if(( end - start ) >= size) {
+			end = myMemoryBlockList.get(i).getStartPosition() - 1;
+			if(( end - start + 1 ) >= size) {
 				MemoryBlock myMemoryBlock =new MemoryBlock(start, size, false, ProcessController.getCurrentPid());
 				//添加到list里
 				myMemoryBlockList.add(myMemoryBlock);
 				sortList();
 				return myMemoryBlock;
 			}
-			start = myMemoryBlockList.get(i).getEndPosition();
+			start = myMemoryBlockList.get(i).getEndPosition() + 1;
 		}
-		if(start == 0 && (MAX_SIZE - start) >= size) {
+		if(start == 0 && (MAX_SIZE - start + 1) >= size) {
 			MemoryBlock myMemoryBlock=new MemoryBlock(start, size, false, ProcessController.getCurrentPid());
 			myMemoryBlockList.add(myMemoryBlock);
 			sortList();
 			return myMemoryBlock;
 		} else if( ( MAX_SIZE - myMemoryBlockList.get( myMemoryBlockList.size() - 1 ).getEndPosition() ) >= size ) {
 			//查看进程占用块间的空余内存是否有满足的，没有则通过以下的if语句来判断剩余区域有无满足块
-			int st = myMemoryBlockList.get(myMemoryBlockList.size() - 1).getEndPosition();
+			int st = myMemoryBlockList.get(myMemoryBlockList.size() - 1).getEndPosition() + 1;
 			MemoryBlock myMemoryBlock=new MemoryBlock(st, size, false, ProcessController.getCurrentPid());
 			myMemoryBlockList.add(myMemoryBlock);
 			sortList();

@@ -57,6 +57,7 @@ public class ProcessController implements Runnable{
 	private double timeChip = 2.0D;								// 时间片
 	private double allRunTime = 0D;								// 轮转运行时间
 
+
 	// CPU 单例模型调用
 	private CPU cpu=CPU.getInstance();
 	// 内存分配器
