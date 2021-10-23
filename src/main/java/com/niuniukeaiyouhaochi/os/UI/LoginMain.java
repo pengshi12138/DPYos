@@ -10,7 +10,10 @@ package com.niuniukeaiyouhaochi.os.UI;
  */
 import javafx.application.Application;
 import javafx.concurrent.Worker;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.scene.web.WebView;
@@ -42,15 +45,21 @@ public class LoginMain extends Application {
 			if (Worker.State.SUCCEEDED == newValue) {
 				// 在web引擎页面中设置一个名为“javaConnector”的接口对象
 				javascriptConnector = (JSObject) webEngine.executeScript("window");
-
 				javascriptConnector.setMember("JavaApp", javaApp);
 				System.out.println(javascriptConnector.getMember("JavaApp"));
 			}
 		});
-
 		scene = new Scene(webView);
-		primaryStage.setFullScreen(true);
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent keyEvent) {
+				if (keyEvent.getCode() == KeyCode.ESCAPE) {
+					primaryStage.close();
+				}
+			}
+		});
 
+		primaryStage.setFullScreen(true);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

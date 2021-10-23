@@ -247,6 +247,8 @@ public class Controller implements Initializable {
 
 	Process lastProcess = null;
 	Process process = null;
+	Address lastAddress=null;
+	String  pid;
 	// 设备面板加载
 	@FXML
 	void start(ActionEvent event) {
@@ -463,23 +465,40 @@ public class Controller implements Initializable {
 				 Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
+						try {
+							if (process == processController.getHangOutProcess()) {
+								return;
+							}
+							else {
+								pid=process.getPcb().getId();
+							}
+							Address address=null;
+							for(int i=0;i<MemoryController.getInstance().getMyMemoryBlockList().size();i++)
+							{
+								if(MemoryController.getInstance().getMyMemoryBlockList().get(i).getPID()
+										.equals(pid)){
+									address=MemoryController.getInstance().getMyMemoryBlockList().get(i).getAddress();
+								}
+							}
 
-						if (process == processController.getHangOutProcess()) {
-							return;
-						}
-						if (lastProcess == null) {
+							if (lastAddress == null) {
+								lastAddress = address;
+							}
+
+							for (int i = lastAddress.getStartAddress();
+								 i <= lastAddress.getEndAddress(); i++) {
+								labels.get(i).setBorder(null);
+							}
+							for (int i = address.getStartAddress();
+								 i <= address.getEndAddress(); i++) {
+								labels.get(i).setBorder(new Border(new BorderStroke(Paint.valueOf("#FB0D11"),
+										BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
+							}
 							lastProcess = process;
+							lastAddress=address;
+						} catch (Exception e) {
+							System.out.println(" 刷新频率对准中 ");
 						}
-						for (int i = lastProcess.getAddress().getStartAddress();
-							 i <= lastProcess.getAddress().getEndAddress(); i++) {
-							labels.get(i).setBorder(null);
-						}
-						for (int i = process.getAddress().getStartAddress();
-							 i <= process.getAddress().getEndAddress(); i++) {
-							labels.get(i).setBorder(new Border(new BorderStroke(Paint.valueOf("#FB0D11"),
-									BorderStrokeStyle.SOLID, new CornerRadii(2), new BorderWidths(2))));
-						}
-						lastProcess = process;
 					}
 				});
 
@@ -616,11 +635,20 @@ public class Controller implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				for(int i=0;i<=511;i++)
+				{
+					labels.get(i).setBackground(
+							new Background(new BackgroundFill(DefaultColor,null,null)));
+					labels.get(i).setBorder(null);
+				}
+
 				for (MemoryBlock memoryBlock : MemoryBlocks) {
-					for (int i = memoryBlock.getStartPosition(); i <= memoryBlock.getEndPosition(); i++) {
+					for (int i = memoryBlock.getAddress().getStartAddress(); i <= memoryBlock.getAddress().getEndAddress(); i++) {
+
 						labels.get(i).setBackground(new Background(new BackgroundFill(
 								memoryBlock.getColor(), null, null
 						)));
+
 					}
 				}
 			}
@@ -632,7 +660,7 @@ public class Controller implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				for (int i = memoryBlock.getStartPosition(); i <= memoryBlock.getEndPosition(); i++) {
+				for (int i = memoryBlock.getAddress().getStartAddress(); i <= memoryBlock.getAddress().getEndAddress(); i++) {
 					labels.get(i).setBackground(new Background(new BackgroundFill(
 							DefaultColor, null, null
 					)));

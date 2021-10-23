@@ -27,9 +27,9 @@
          <left>
             <AnchorPane maxHeight="600.0" maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="300.0" BorderPane.alignment="CENTER">
                <children>
-                  <AnchorPane prefHeight="150.0" prefWidth="300.0">
+                  <AnchorPane prefHeight="150.0" prefWidth="300.0" styleClass="labelStyle" stylesheets="@../css/sample.css">
                      <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="25.0" maxWidth="300.0" prefHeight="25.0" prefWidth="300.0" text="启动面板" textAlignment="CENTER">
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="1.0" maxHeight="26.0" maxWidth="300.0" prefHeight="26.0" prefWidth="295.0" styleClass="labelStyle" stylesheets="@../css/sample.css" text="启动面板" textAlignment="CENTER">
                            <font>
                               <Font size="16.0" />
                            </font>

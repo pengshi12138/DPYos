@@ -46,10 +46,15 @@ public class MemoryController {
 		int length;
 		for(int i = 0;i < memoryController.myMemoryBlockList.size(); i++)
 		{
+			System.out.println("Start="+memoryController.myMemoryBlockList.get(i).getAddress().getStartAddress());
+			System.out.println("end="+memoryController.myMemoryBlockList.get(i).getAddress().getEndAddress());
 			length=memoryController.myMemoryBlockList.get(i).getAddress().getEndAddress() -
 					memoryController.myMemoryBlockList.get(i).getAddress().getStartAddress();
 			memoryController.myMemoryBlockList.get(i).getAddress().setStartAddress(start);
 			memoryController.myMemoryBlockList.get(i).getAddress().setEndAddress(start+length);
+			System.out.println("Start2="+memoryController.myMemoryBlockList.get(i).getAddress().getStartAddress());
+			System.out.println("end2="+memoryController.myMemoryBlockList.get(i).getAddress().getEndAddress());
+
 			start=start+length+1;
 		}
 		Controller.MemoryRefresh();
