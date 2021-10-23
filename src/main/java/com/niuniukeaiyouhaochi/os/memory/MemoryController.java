@@ -2,19 +2,25 @@ package com.niuniukeaiyouhaochi.os.memory;
 
 
 import com.niuniukeaiyouhaochi.os.ProcessManager.ProcessController;
+import com.niuniukeaiyouhaochi.os.UI.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author pengchuang
+ * @author dongye
  * @date 2021/10/4 17:51
  */
 public class MemoryController {
 	private Memory memory;
 	private static MemoryController memoryController;
-	List<MemoryBlock> myMemoryBlockList = new ArrayList<>();
-	private static final int MAX_SIZE = 521;
+	private List<MemoryBlock> myMemoryBlockList = new ArrayList<>();
+	private static final int MAX_SIZE = 511;
+
+	public List<MemoryBlock> getMyMemoryBlockList() {
+		return myMemoryBlockList;
+	}
+
 	public MemoryController() {
 		this.memory = Memory.getInstance();
 	}
@@ -27,11 +33,18 @@ public class MemoryController {
 	}
 
 
+	/**
+	 * description 压缩内存
+	 * param void
+	 * return void
+	 * author dongye
+	 * createTime 2021/10/10
+	 **/
 	public static void mergeMemory()
 	{
 		int start=0;
 		int length;
-		for(int i=0;i<memoryController.myMemoryBlockList.size();i++)
+		for(int i = 0;i < memoryController.myMemoryBlockList.size(); i++)
 		{
 			length=memoryController.myMemoryBlockList.get(i).getAddress().getEndAddress() -
 					memoryController.myMemoryBlockList.get(i).getAddress().getStartAddress();
@@ -39,6 +52,7 @@ public class MemoryController {
 			memoryController.myMemoryBlockList.get(i).getAddress().setEndAddress(start+length);
 			start=start+length;
 		}
+		Controller.MemoryRefresh();
 	}
 
 
@@ -55,7 +69,7 @@ public class MemoryController {
 	 * description 首次适配分配内存，有三种情况如下
 	 * param int size 请求分配的内存块
 	 * return MemoryBlock
-	 * author pc
+	 * author dongye
 	 * createTime 2021/10/10 11:52
 	 **/
 	public MemoryBlock findBlankAddress(int size)
@@ -98,6 +112,7 @@ public class MemoryController {
 	 **/
 	public void release(MemoryBlock myMemoryBlock)
 	{
+		Controller.MemoryRelease(myMemoryBlock);
 		myMemoryBlockList.remove(myMemoryBlock);
 	}
 

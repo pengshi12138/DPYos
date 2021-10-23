@@ -1,5 +1,9 @@
 package com.niuniukeaiyouhaochi.os.ProcessManager;
 
+import javafx.scene.paint.Color;
+
+import java.util.Random;
+
 /**
  * @author pengchuang and dongye
  * @date 2021/10/1 21:32
@@ -13,6 +17,8 @@ public class PCB {
 	private Double totalRunTime;				// 总运行时间
 	private Double lastRestRunTime;				// 时间片剩余时间
 	private boolean isInterrupt;  				// 是否中断
+
+
 
 	public PCB() {
 	}
@@ -89,4 +95,6 @@ public class PCB {
 	public void setInterrupt(boolean interrupt) {
 		isInterrupt = interrupt;
 	}
+
+
 }

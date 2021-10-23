@@ -1,6 +1,7 @@
 package com.test;
 
-import javafx.application.Application;
+
+import com.niuniukeaiyouhaochi.os.UI.LoginMain;
 
 /**
  * @description:
@@ -12,6 +13,6 @@ import javafx.application.Application;
  */
 public class AppMain {
 	public static void main(String[] args) {
-		Main.launch(Main.class,args);
+		LoginMain.launch(LoginMain.class,args);
 	}
 }

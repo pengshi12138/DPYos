@@ -11,8 +11,7 @@ public class DeviceController {
 	private static DeviceController deviceController;
 	public static List<Device> deviceList = new ArrayList<Device>();
 
-	private DeviceController()
-	{
+	private DeviceController() {
 		deviceList.add(new Device("A"));
 		deviceList.add(new Device("A"));
 		deviceList.add(new Device("B"));
@@ -30,8 +29,7 @@ public class DeviceController {
 
 	public static Device getDevice(String type) {
 		for(int i=0;i<deviceList.size();i++) {
-			if(deviceList.get(i).getType().equals(type)&&!deviceList.get(i).isOccupy())
-			{
+			if(deviceList.get(i).getType().equals(type)&&!deviceList.get(i).isOccupy()) {
 				return deviceList.get(i);
 			}
 		}

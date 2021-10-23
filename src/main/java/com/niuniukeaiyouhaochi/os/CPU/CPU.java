@@ -12,7 +12,7 @@ public class CPU extends Thread {
 	private double startTime = 0.0D;		// 当前开始时间
 	private double stopTime = 0.0D;			// 当前结束时间
 	private double time = 0.0D;				// 运行时间
-	private boolean stopFlag = false;		// 是否cpu停止
+	private boolean stopFlag = true;		// 是否cpu停止
 
 
 	@Override

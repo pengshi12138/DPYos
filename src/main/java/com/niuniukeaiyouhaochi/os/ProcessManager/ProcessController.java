@@ -1,6 +1,7 @@
 package com.niuniukeaiyouhaochi.os.ProcessManager;
 
 import com.niuniukeaiyouhaochi.os.CPU.CPU;
+import com.niuniukeaiyouhaochi.os.UI.Controller;
 import com.niuniukeaiyouhaochi.os.device.Device;
 import com.niuniukeaiyouhaochi.os.device.DeviceController;
 import com.niuniukeaiyouhaochi.os.memory.Address;
@@ -32,15 +33,29 @@ public class ProcessController implements Runnable{
 	private static ProcessController processController;
 	private Process runningProcess;
 	private Process hangOutProcess = createHangOutProcess();
+
+	public List<Process> getRunningQueue() {
+		return runningQueue;
+	}
+
+	public List<Process> getReadyQueue() {
+		return readyQueue;
+	}
+
+	public List<Process> getBlockedQueue() {
+		return blockedQueue;
+	}
+
 	private static int currentPID = 0;
-	public static final int MAX_PRIORITY = 10;
+	public static final int MAX_PRIORITY = 5;
 	public static final int MIN_PRIORITY = 0;
 	public static final int MAX_REST_RUN_TIME = 5;
 
 	private List<Process> runningQueue = new ArrayList<>();		// 被中断队列
 	private List<Process> readyQueue = new ArrayList<>();		// 时间片轮转的进程队列
 	private List<Process> blockedQueue = new ArrayList<>();		// 阻塞队列
-	private double timeChip = 2.0D;
+	private double timeChip = 2.0D;								// 时间片
+	private double allRunTime = 0D;								// 轮转运行时间
 
 	// CPU 单例模型调用
 	private CPU cpu=CPU.getInstance();
@@ -74,6 +89,17 @@ public class ProcessController implements Runnable{
 		return "#" + currentPID;
 	}
 
+	public Process getRunningProcess() {
+		return runningProcess;
+	}
+
+	public Process getHangOutProcess() {
+		return hangOutProcess;
+	}
+
+	public double getAllRunTime() {
+		return allRunTime;
+	}
 
 	/**
 	 *  这里拿来监视cpu的运行时间，或者用runningProcess在此运行
@@ -87,7 +113,7 @@ public class ProcessController implements Runnable{
 				create();
 				// cpu 刷新时间单位
 				double runtime = 0;
-				double allRunTime = 0;
+				allRunTime = 0;
 				double first = cpu.getCurrentTime();
 				boolean interrupt = false;
 				// 时间片轮转函数
@@ -130,7 +156,7 @@ public class ProcessController implements Runnable{
 					}
 
 					try {
-						Thread.sleep(100l);
+						Thread.sleep(100L);
 					} catch (InterruptedException e) {
 						System.out.printf(e.toString());
 					}
@@ -157,7 +183,7 @@ public class ProcessController implements Runnable{
 					}
 				}
 				//打印cpu运行进程
-				if(runningProcess==hangOutProcess)
+				if(runningProcess == hangOutProcess)
 				{
 					System.out.println("hangOutProcess");
 				}
@@ -167,31 +193,32 @@ public class ProcessController implements Runnable{
 				}
 				//以下三个循环为打印三个队列里的进程
 				System.out.println("以下是就绪队列");
-				for(int i=0;i<readyQueue.size();i++)
+				for(int i = 0; i < readyQueue.size(); i++)
 				{
 					System.out.println("就绪队列: [ id :" + readyQueue.get(i).getPcb().getId() +" ;" +
 							" 优先级 : " + readyQueue.get(i).getPcb().getPriority() + " ; 设备类型"+readyQueue.get(i).getDeviceType()+"]");
 				}
-				System.out.println("\n\n\n");
-
 
 				System.out.println("以下是被中断队列,每次时间片轮转后都增加一点优先级");
-				for(int i=0;i<runningQueue.size();i++)
+				for(int i = 0; i < runningQueue.size(); i++)
 				{
 					runningQueue.get(i).getPcb().setPriority( runningQueue.get(i).getPcb().getPriority() + 1 );
 					System.out.println("中断队列: [ id :" +runningQueue.get(i).getPcb().getId() +" ;" +
 							" 优先级 : " + runningQueue.get(i).getPcb().getPriority() +" ; 设备类型"+runningQueue.get(i).getDeviceType()+ "]");
 				}
-				System.out.println("\n\n\n");
-
 
 				System.out.println("以下是阻塞队列");
-				for(int i=0;i<blockedQueue.size();i++)
+				for(int i = 0; i < blockedQueue.size(); i++)
 				{
 					System.out.println("阻塞队列: [ id :" + blockedQueue.get(i).getPcb().getId() +" ;" +
 							" 优先级 : " + blockedQueue.get(i).getPcb().getPriority() + " ; 设备类型"+blockedQueue.get(i).getDeviceType()+"]");
 				}
-				System.out.println("\n\n\n");
+			} else {
+				try {
+					Thread.sleep(10L);
+				} catch (Exception e) {
+
+				}
 			}
 		}
 	}
@@ -210,13 +237,13 @@ public class ProcessController implements Runnable{
 	public Process create() {
 
 		double GenerationProbability = Math.random();
-		if (GenerationProbability <= 0.3) {
+		if (GenerationProbability <= 0.3 || blockedQueue.size() > 4) {
 			return null;
 		}
 
 		// 设置进程创建时间
 		try {
-			Thread.sleep((long) (GenerationProbability*10));
+			Thread.sleep((long) (GenerationProbability * 100));
 		} catch (InterruptedException e) {
 			System.out.printf(e.toString());
 		}
@@ -239,7 +266,8 @@ public class ProcessController implements Runnable{
 		}
 
 
-		// 判断是否有多余的空间，没有返回null,在process里增加type参数，每个进程获得的device都是那五个，不用new，需要改动的地方有：onCreate，getFreeDevice,destroy;
+		// 判断是否有多余的空间，没有返回null,在process里增加type参数，每个进程获得的device都是那五个，
+		// 不用new，需要改动的地方有：onCreate，getFreeDevice,destroy;
 		if (address == null) {
 			return null;
 		} else {
@@ -253,8 +281,7 @@ public class ProcessController implements Runnable{
 			process.setDeviceType(type);
 			process.setDevice(device);
 			//获取到空闲设备,设置设备占用信息
-			if(device!=null)
-			{
+			if(device!=null) {
 				device.setPID("#"+(currentPID-1));
 				device.setOccupy(true);
 				ready(process);
@@ -264,29 +291,22 @@ public class ProcessController implements Runnable{
 				System.out.println("没有设备");
 				block(process);
 			}
-//			System.out.println("开始进程创建 [ id :" + process.getPcb().getId() +" ;" +" size : " + size + "; start : " +
-//					address.getStartAddress() + "; end : " + address.getEndAddress() + "; 优先级 : " + pcb.getPriority() + "]");
-
 			//如果获取设备，则直接进入就绪队列ready（）,否则设置block（）
-
+			Controller.MemoryOccupy(memoryBlock);
 			return process;
 		}
 	}
 
-	public static String getRandomDevice()
-	{
+	public static String getRandomDevice() {
 		Random random=new Random();
 		int num=random.nextInt(10);
-		if(num%3==0)
-		{
+		if(num%3==0) {
 			return "A";
 		}
-		if(num%3==1)
-		{
+		if(num%3==1) {
 			return "B";
 		}
-		if(num%3==2)
-		{
+		if(num%3==2) {
 			return "C";
 		}
 		return "A";
@@ -318,6 +338,7 @@ public class ProcessController implements Runnable{
 		}
 
 		// todo : 记得要改
+
 		return true;
 	}
 
@@ -335,16 +356,14 @@ public class ProcessController implements Runnable{
 	 * @param process
 	 */
 	public void block(Process process) {
-//		System.out.println("阻塞进程 [ id :" + process.getPcb().getId() + "]");
 		blockedQueue.add(process);
 		process.setBlock();
 	}
 
-	/*
+	/**
 	* 唤醒进程
 	* */
 	public void awake(Process process) {
-//		System.out.println("唤醒进程 [ id :" + process.getPcb().getId() + "]");
 		this.blockToReady(process);
 		// todo ： 设备分配:Done
 	}
@@ -379,7 +398,6 @@ public class ProcessController implements Runnable{
 			process=readyQueue.get(0);
 			readyQueue.remove(process);
 			process.setRunning();
-//			System.out.println("就绪态到运行态 [ id : " + process.getPcb().getId() + " ]");
 			return process;
 		}
 		else {
@@ -398,7 +416,6 @@ public class ProcessController implements Runnable{
 			Process process=null;
 			process=runningQueue.get(0);
 			runningQueue.remove(process);
-//			System.out.println("被抢占CPU进程回到运行态 [ id : " + process.getPcb().getId() + " ]");
 			return process;
 		} else {
 			return null;
@@ -410,7 +427,6 @@ public class ProcessController implements Runnable{
 	 * @param process
 	 */
 	public void interrupt(Process process) {
-//		System.out.println("抢占的进程开始运行 : [ id : " + process.getPcb().getId() + " ]");
 		runningQueue.add(runningProcess);
 		runningProcess=process;
 		readyQueue.remove(process);
@@ -452,14 +468,15 @@ public class ProcessController implements Runnable{
 	 * @return int 优先级
 	 */
 	private static int getRandomPriority() {
-		return (int)(Math.random() * 5.0D);
+		Random random=new Random();
+		return random.nextInt(MAX_PRIORITY) + 1;
 	}
 
 	/**
-	 * getRandomRestRunTime 获取随机程序运行剩余时间，值为 1 ~ 6
+	 * getRandomRestRunTime 获取随机程序运行剩余时间，值为 1 ~ 4
 	 * @return double 运行时间
 	 */
 	private static double getRandomRestRunTime() {
-		return (Math.random() * 5.0D) + 1;
+		return (Math.random() * 3.0D) + 1;
 	}
 }

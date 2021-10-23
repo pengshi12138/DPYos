@@ -1,0 +1,19 @@
+.progress-indicator .percentage {
+    -fx-fill:null;
+}
+
+.v-box .pane{
+    -fx-border-style: solid inside;
+}
+.pane {
+    -fx-border-style: solid inside;
+    -fx-end-margin: 1px;
+}
+
+#diskLabel {
+    -fx-background-color: grey;
+}
+
+#diskActiveLabel {
+    -fx-background-color: red;
+}
