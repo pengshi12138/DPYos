@@ -1,23 +1,10 @@
 package com.niuniukeaiyouhaochi.os.UI;
 
-import com.niuniukeaiyouhaochi.os.Listener.DragUtil;
 import javafx.application.Application;
-import javafx.concurrent.Worker;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.web.WebEngine;
 
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
