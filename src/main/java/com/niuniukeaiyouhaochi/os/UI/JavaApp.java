@@ -28,12 +28,18 @@ public class JavaApp {
 			processMain = new ProcessMain();
 			processMain.loginProcessController();
 		} else {
+			Controller.MemoryRefresh();
 			processMain.LoginStage.show();
 		}
-
 		LoginMain.LoginStage.hide();
 	}
-
+	/**
+	 * description 磁盘管理的进入
+	 * param void
+	 * return void
+	 * author pc
+	 * createTime 2021/10/27
+	 **/
 	public void loginFile() throws Exception {
 		System.out.println("login File...");
 

@@ -1,7 +1,7 @@
 package com.niuniukeaiyouhaochi.os.UI;
 
 /**
- * @description:
+ * @description:陆界面，加载主界面，进行用户的选择
  * @projectName:DPYos
  * @see:com.test
  * @author: pc
@@ -18,8 +18,6 @@ import javafx.scene.web.WebEngine;
 import javafx.stage.Stage;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
-import org.w3c.dom.Node;
-
 
 public class LoginMain extends Application {
 
@@ -33,8 +31,6 @@ public class LoginMain extends Application {
 	private JSObject javascriptConnector;
 
 	public static Stage LoginStage;
-
-//	public static boolean flag = false; // 记录网页是否一次记载，一次加载记录，防止对象重新注入
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {

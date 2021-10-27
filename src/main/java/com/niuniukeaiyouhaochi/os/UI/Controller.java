@@ -244,11 +244,12 @@ public class Controller implements Initializable {
 	private static DeviceController deviceController = DeviceController.getInstance();		// 设备控制器
 	private static ProcessController processController = ProcessController.getInstance();	// 进程控制器
 
-
 	Process lastProcess = null;
 	Process process = null;
 	Address lastAddress=null;
 	String  pid;
+
+
 	// 设备面板加载
 	@FXML
 	void start(ActionEvent event) {
@@ -295,8 +296,8 @@ public class Controller implements Initializable {
 		} else {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			                 alert.setTitle("警告");
-			                 alert.setHeaderText("tmdCPU都没停，你运行个嘚\n" +
-									 "你他妈的傻逼是吧（dongye）");
+			                 alert.setHeaderText("抱歉，CPU还在运行中\n" +
+									 "如果想要进行压缩操作，请将CPU暂停");
 			                 alert.showAndWait();
 		}
 	}
@@ -527,10 +528,10 @@ public class Controller implements Initializable {
 		tc.valueProperty().addListener(new ChangeListener<ArrayList<Integer>>() {
 			/*
 			 * description 实现对于lineChart的图像更新
-			 * param
-			 * return
+			 * param void
+			 * return void
 			 * author pc
-			 * createTime
+			 * createTime 2021/10/20
 			 **/
 			public double cur = 0;
 			@Override
