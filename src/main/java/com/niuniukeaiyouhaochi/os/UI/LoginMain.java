@@ -27,22 +27,25 @@ public class LoginMain extends Application {
 	private WebView webView;
 	private WebEngine webEngine;
 
+	public static JavaApp javaApp = new JavaApp();
+
 	/** 用于与Javascript引擎通信。 */
 	private JSObject javascriptConnector;
 
-	public JavaApp javaApp = new JavaApp();
-
 	public static Stage LoginStage;
+
+//	public static boolean flag = false; // 记录网页是否一次记载，一次加载记录，防止对象重新注入
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
 		LoginStage = primaryStage;
 		webView = new WebView();
 		webEngine = webView.getEngine();
 		webEngine.load(getClass().getResource("/html/index.html").toExternalForm());
-
 		webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-			if (Worker.State.SUCCEEDED == newValue) {
+			if (Worker.State.SUCCEEDED == newValue ) {
+
 				// 在web引擎页面中设置一个名为“javaConnector”的接口对象
 				javascriptConnector = (JSObject) webEngine.executeScript("window");
 				javascriptConnector.setMember("JavaApp", javaApp);
@@ -50,7 +53,7 @@ public class LoginMain extends Application {
 			}
 		});
 		scene = new Scene(webView);
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		scene.setOnKeyPressed(new EventHandler<>() {
 			@Override
 			public void handle(KeyEvent keyEvent) {
 				if (keyEvent.getCode() == KeyCode.ESCAPE) {

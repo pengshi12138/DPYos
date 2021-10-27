@@ -1,11 +1,7 @@
 package com.niuniukeaiyouhaochi.os.UI;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-
 /**
- * @description:
+ * @description: 页面跳转类，实现三个面板之间的跳转
  * @projectName:DPYos
  * @see:com.niuniukeaiyouhaochi.os.UI
  * @author: pc
@@ -13,17 +9,34 @@ import javafx.scene.Scene;
  * @version:1.0
  */
 public class JavaApp {
+	ProcessMain processMain;
+
 	public void login() throws Exception {
-		System.out.println("login...");
-		Parent root = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
-		Scene scene = new Scene(root, 600, 400);
-		LoginMain.LoginStage.setScene(scene);
+		System.out.println("login Choice...");
 	}
 
-	public static void loginProcess() throws Exception {
-		System.out.println("login...");
-		ProcessMain processMain = new ProcessMain();
-		processMain.loginProcessController();
-		LoginMain.LoginStage.close();
+	/**
+	 * description 登录Process控制面板
+	 * param void
+	 * return void
+	 * author pc
+	 * createTime 2021/10/27
+	 **/
+	public void loginProcess() throws Exception {
+		System.out.println("login Process...");
+		if (processMain == null) {
+			processMain = new ProcessMain();
+			processMain.loginProcessController();
+		} else {
+			processMain.LoginStage.show();
+		}
+
+		LoginMain.LoginStage.hide();
+	}
+
+	public void loginFile() throws Exception {
+		System.out.println("login File...");
+
+		LoginMain.LoginStage.hide();
 	}
 }

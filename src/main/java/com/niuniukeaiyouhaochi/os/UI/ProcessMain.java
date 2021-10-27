@@ -24,18 +24,10 @@ import javafx.stage.StageStyle;
 
 
 public class ProcessMain extends Application {
-    /** 用于与Javascript引擎通信。 */
-//    private JSObject javascriptConnector;
 
-    /** 用于从Javascript引擎进行通信。 */
-    private int javaConnector;
-
-    private WebEngine engine = null;
-
-
-    Stage stage=new Stage();
+    public static Stage stage = new Stage();
     public static Parent page;
-    public static Scene scene;
+    public static Scene scene = null;
     public static Stage LoginStage;
     @Override
     public void start(Stage primaryStage) throws Exception {

@@ -10,12 +10,7 @@
        onselectstart ='return false' onselect='document.selection.empty()'
        oncopy='document.selection.empty()' onbeforecopy='return false' onmouseup='document.selection.empty()'>
 
-    <script >
-        var JavaApp = 'test';
-        function login (){
-            JavaApp.login();
-        }
-    </script>
+    <script src="../js/Choice.js"></script>
     <div class="container">
         <img src="../img/1.jpg" id="img1">
         <div class="nav">
@@ -40,7 +35,7 @@
                 JavaFx版本 : 17</br>
                 小组成员 : <p1>东爷 龙总 佩奇 杰哥 pc 赵欣</p1>
             </p>
-            <a href="#" onclick="login()">进 入 系 统</a>
+            <a href="#" onclick="window.location.href='cutebear.html';login()">进 入 系 统</a>
         </div>
         <div class="OS"></div>
     </div>
