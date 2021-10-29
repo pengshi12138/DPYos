@@ -869,7 +869,8 @@ public class FileXMLController implements Initializable {
                     }
                     Stage dialogStage = new Stage();
                     Scene dialogScene = new Scene(root, 387, 504);
-                    dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/华为.png"), 16, 16, false, false));
+                    Image i =new Image("/img/华为.png");
+                    dialogStage.getIcons().add(i);
                     dialogStage.setScene(dialogScene);
                     dialogStage.show();
 //                    监听窗体关闭
