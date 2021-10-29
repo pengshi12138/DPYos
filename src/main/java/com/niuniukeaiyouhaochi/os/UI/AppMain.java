@@ -1,6 +1,5 @@
-package com.test;
+package com.niuniukeaiyouhaochi.os.UI;
 
-import com.niuniukeaiyouhaochi.os.UI.FileMain;
 import javafx.application.Application;
 
 /**
@@ -13,6 +12,6 @@ import javafx.application.Application;
  */
 public class AppMain {
 	public static void main(String[] args) {
-		Application.launch(FileMain.class, args);
+		Application.launch(LoginMain.class, args);
 	}
 }

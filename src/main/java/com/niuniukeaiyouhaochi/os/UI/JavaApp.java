@@ -10,7 +10,7 @@ package com.niuniukeaiyouhaochi.os.UI;
  */
 public class JavaApp {
 	ProcessMain processMain;
-
+	FileMain fileMain;
 	public void login() throws Exception {
 		System.out.println("login Choice...");
 	}
@@ -28,7 +28,7 @@ public class JavaApp {
 			processMain = new ProcessMain();
 			processMain.loginProcessController();
 		} else {
-			Controller.MemoryRefresh();
+			ProcessXMLController.MemoryRefresh();
 			processMain.LoginStage.show();
 		}
 		LoginMain.LoginStage.hide();
@@ -42,7 +42,12 @@ public class JavaApp {
 	 **/
 	public void loginFile() throws Exception {
 		System.out.println("login File...");
-
+		if (fileMain == null) {
+			fileMain = new FileMain();
+			fileMain.loginFileController();
+		} else {
+			fileMain.LoginStage.show();
+		}
 		LoginMain.LoginStage.hide();
 	}
 }

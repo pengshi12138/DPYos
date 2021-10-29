@@ -21,7 +21,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="mainPane" maxHeight="750.0" maxWidth="1337.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1337.0" styleClass="root" stylesheets="@../css/sample.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.niuniukeaiyouhaochi.os.UI.Controller">
+<StackPane fx:id="mainPane" maxHeight="750.0" maxWidth="1337.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1337.0" styleClass="root" stylesheets="@../css/sample.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.niuniukeaiyouhaochi.os.UI.ProcessXMLController">
    <children>
       <BorderPane fx:id="root" maxHeight="650.0" maxWidth="1237.0" prefHeight="650.0" prefWidth="1237.0" styleClass="filletPane" stylesheets="@../css/sample.css">
          <left>

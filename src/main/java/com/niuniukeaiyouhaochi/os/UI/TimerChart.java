@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * @version:1.0
  */
 public class TimerChart extends ScheduledService<ArrayList<Integer>> {
-	Controller main;
-	public TimerChart(Controller main){
+	ProcessXMLController main;
+	public TimerChart(ProcessXMLController main){
 		this.main = main;
 	}
 	public Task<ArrayList<Integer>> createTask(){

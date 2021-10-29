@@ -40,7 +40,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class ProcessXMLController implements Initializable {
 
 	@FXML
 	private NumberAxis x;

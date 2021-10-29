@@ -2,7 +2,7 @@ package com.niuniukeaiyouhaochi.os.memory;
 
 
 import com.niuniukeaiyouhaochi.os.ProcessManager.ProcessController;
-import com.niuniukeaiyouhaochi.os.UI.Controller;
+import com.niuniukeaiyouhaochi.os.UI.ProcessXMLController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public class MemoryController {
 
 			start=start+length+1;
 		}
-		Controller.MemoryRefresh();
+		ProcessXMLController.MemoryRefresh();
 	}
 
 
@@ -117,7 +117,7 @@ public class MemoryController {
 	 **/
 	public void release(MemoryBlock myMemoryBlock)
 	{
-		Controller.MemoryRelease(myMemoryBlock);
+		ProcessXMLController.MemoryRelease(myMemoryBlock);
 		myMemoryBlockList.remove(myMemoryBlock);
 	}
 

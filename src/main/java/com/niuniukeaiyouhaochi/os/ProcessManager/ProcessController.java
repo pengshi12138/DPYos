@@ -1,7 +1,7 @@
 package com.niuniukeaiyouhaochi.os.ProcessManager;
 
 import com.niuniukeaiyouhaochi.os.CPU.CPU;
-import com.niuniukeaiyouhaochi.os.UI.Controller;
+import com.niuniukeaiyouhaochi.os.UI.ProcessXMLController;
 import com.niuniukeaiyouhaochi.os.device.Device;
 import com.niuniukeaiyouhaochi.os.device.DeviceController;
 import com.niuniukeaiyouhaochi.os.memory.Address;
@@ -293,7 +293,7 @@ public class ProcessController implements Runnable{
 				block(process);
 			}
 			//如果获取设备，则直接进入就绪队列ready（）,否则设置block（）
-			Controller.MemoryOccupy(memoryBlock);
+			ProcessXMLController.MemoryOccupy(memoryBlock);
 			return process;
 		}
 	}
