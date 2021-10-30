@@ -32,6 +32,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -736,29 +737,53 @@ public class FileXMLController implements Initializable {
                     System.out.println("文件是否已经打开");
 //                    显示文件内容
                     String contentText = file.getContent();
+                    AnchorPane anchorPane = new AnchorPane();
+                    ImageView imageView = new ImageView();
+                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
                     Label label = new Label();
                     label.setText(contentText);
+                    label.setPrefSize(500,270);
+                    label.setLayoutY(30);
+                    label.setAlignment(Pos.TOP_LEFT);
+                    Label label1=new Label("",imageView);
+                    label1.setLayoutX(470);
+                    label1.setLayoutY(7);
+                    anchorPane.getChildren().add(label);
+                    anchorPane.getChildren().add(label1);
+                    anchorPane.setStyle("-fx-background-color:#666666;" +         //设置背景颜色
+                            "-fx-text-fill:#FF0000;" +        //设置字体颜色
+                            "-fx-border-radius:0;" +         //设置边框圆角
+                            "-fx-border-style:solid;"+      //设置边框样式
+                            "-fx-border-width:2;"
+                    );
+                    label.setStyle("-fx-background-color:white;" +         //设置背景颜色
+                            "-fx-text-fill:black;" +//设置字体颜色
+                            "-fx-font-size:20;"+
+                            "-fx-font-weight: bold;"+
+                            "-fx-border-radius:0;" +         //设置边框圆角
+                            "-fx-border-color:black;"+     //设置边框颜色
+                            "-fx-border-style:solid;"+      //设置边框样式
+                            "-fx-border-width:2;"         //设置边框宽度
+                    );
                     Stage dialogStage = new Stage();
-                    Scene dialogScene = new Scene(label, 500, 400);
+                    Scene dialogScene = new Scene(anchorPane, 500, 300);
                     dialogStage.setScene(dialogScene);
                     dialogStage.setTitle(file.getFileName());
-                    dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/filePic.png"), 5, 5, false, false));
+                    dialogStage.initStyle(StageStyle.UNDECORATED);
+                    label1.setOnMouseClicked(mouseEvent -> {
+                        if(mouseEvent.getClickCount()==1)
+                            dialogStage.close();
+                        //             移除打开文件序列
+                        fatService.removeOpenFile(fat);
+//                    刷新文件打开状态表
+                        setFileStatue();
+                    });
                     dialogStage.show();
 //                    添加到打开文件序列中
                     fatService.addOpenFile(fat, 0);
 //                    刷新文件打开状态表
                     setFileStatue();
-//                    监听窗体关闭
-                    dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
-                        public void handle(WindowEvent event) {
-//                    移除打开文件序列
-                            fatService.removeOpenFile(fat);
-//                    刷新文件打开状态表
-                            setFileStatue();
-                        }
-                    });
-                } else if (event.getTarget().equals(M2)) {
+                }   else if (event.getTarget().equals(M2)) {
 //                    判断该文件是否可写
                     if (file.getType().equals("读")) {
                         GUI.contentOutGUI("该文件只能读，不能写！");
@@ -769,13 +794,80 @@ public class FileXMLController implements Initializable {
                         GUI.contentOutGUI("该文件已经打开了，不能重复打开！");
                         return;
                     }
-//                    写文件
-                    VBox vBox = new VBox();
-                    Stage dialogStage = new Stage();
+//                   / 写文件
                     TextArea textArea = new TextArea();
                     textArea.setText(file.getContent());
                     textArea.setWrapText(true);
+                    textArea.setPrefSize(500,270);
+                    textArea.setLayoutY(30);
                     Button writeBtn = new Button("保存");
+                    Button cancelBtn = new Button("取消");
+                    AnchorPane anchorPane = new AnchorPane();
+                    AnchorPane anchorPane1 = new AnchorPane();
+                    anchorPane1.setPrefSize(496,50);
+                    anchorPane1.setLayoutY(298);
+                    anchorPane1.setLayoutX(2);
+                    anchorPane1.setStyle("-fx-background-color:white;");
+                    anchorPane1.getChildren().add(writeBtn);
+                    anchorPane1.getChildren().add(cancelBtn);
+                    writeBtn.setStyle("-fx-background-color: #D5D5D5;"+
+                            "-fx-border-color: #C4C4C4;"+
+                            "-fx-border-radius:0;"+
+                            "-fx-border-style:solid;"+
+                            "-fx-border-width:1px;");
+                    writeBtn.setPrefSize(90,15);
+                    writeBtn.setLayoutX(100);
+                    writeBtn.setLayoutY(12);
+                    cancelBtn.setStyle("-fx-background-color: #D5D5D5;"+
+                            "-fx-border-color: #C4C4C4;"+
+                            "-fx-border-radius:0;"+
+                            "-fx-border-style:solid;"+
+                            "-fx-border-width:1px;");
+                    cancelBtn.setPrefSize(90,15);
+                    cancelBtn.setLayoutX(300);
+                    cancelBtn.setLayoutY(12);
+                    ImageView imageView = new ImageView();
+                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    Label label1=new Label("",imageView);
+                    label1.setLayoutX(470);
+                    label1.setLayoutY(7);
+                    anchorPane.getChildren().add(textArea);
+                    anchorPane.getChildren().add(label1);
+                    anchorPane.getChildren().add(anchorPane1);
+                    anchorPane.setStyle("-fx-background-color:#666666;" +         //设置背景颜色
+                            "-fx-text-fill:#FF0000;" +        //设置字体颜色
+                            "-fx-border-radius:0;" +         //设置边框圆角
+                            "-fx-border-style:solid;"+      //设置边框样式
+                            "-fx-border-width:2;"
+                    );
+                    textArea.setStyle("-fx-background-color:white;" +         //设置背景颜色
+                            "-fx-text-fill:black;" +//设置字体颜色
+                            "-fx-font-size:20;"+
+                            "-fx-border-radius:0;" +         //设置边框圆角
+                            "-fx-border-color:black;"+     //设置边框颜色
+                            "-fx-border-style:solid;"+      //设置边框样式
+                            "-fx-border-width:2;"         //设置边框宽度
+                    );
+                    Stage dialogStage = new Stage();
+                    Scene dialogScene = new Scene(anchorPane, 500, 350);
+                    dialogStage.setScene(dialogScene);
+                    dialogStage.setTitle(file.getFileName());
+                    dialogStage.initStyle(StageStyle.UNDECORATED);
+                    dialogStage.show();
+                    label1.setOnMouseClicked(mouseEvent -> {
+                        if(mouseEvent.getClickCount()==1)
+                            dialogStage.close();
+                        //             移除打开文件序列
+                        fatService.removeOpenFile(fat);
+//                    刷新文件打开状态表
+                        setFileStatue();
+                    });
+                    dialogStage.show();
+//                    添加到打开文件序列中
+                    fatService.addOpenFile(fat, 0);
+//                    刷新文件打开状态表
+                    setFileStatue();
+
                     writeBtn.setOnAction(e -> {
                         String text = textArea.getText();
                         boolean isOut = fatService.saveToModifyFATS2(fat, text);
@@ -795,16 +887,13 @@ public class FileXMLController implements Initializable {
                         setDiskBlockPane();
                         dialogStage.close();
                     });
-                    vBox.getChildren().addAll(textArea, writeBtn);
-                    Scene dialogScene = new Scene(vBox);
-                    dialogStage.setScene(dialogScene);
-                    dialogStage.setTitle(file.getFileName());
-                    dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/filePic.png"), 10, 10, false, false));
-                    dialogStage.show();
-//                    添加到打开文件序列中
-                    fatService.addOpenFile(fat, 0);
+                    cancelBtn.setOnAction(e -> {
+                        dialogStage.close();
+                        fatService.removeOpenFile(fat);
 //                    刷新文件打开状态表
-                    setFileStatue();
+                        setFileStatue();
+                    });
+
 //                    监听窗体关闭
                     dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                         @Override
@@ -818,12 +907,70 @@ public class FileXMLController implements Initializable {
                     });
                 } else if (event.getTarget().equals(M3)) {
 //                    文件重命名
-                    VBox vBox = new VBox();
-                    Stage dialogStage = new Stage();
                     TextArea textArea = new TextArea();
                     textArea.setText(file.getFileName());
                     textArea.setWrapText(true);
+                    textArea.setPrefSize(500,270);
+                    textArea.setLayoutY(30);
                     Button writeBtn = new Button("保存");
+                    Button cancelBtn = new Button("取消");
+                    AnchorPane anchorPane = new AnchorPane();
+                    AnchorPane anchorPane1 = new AnchorPane();
+                    anchorPane1.setPrefSize(496,50);
+                    anchorPane1.setLayoutY(298);
+                    anchorPane1.setLayoutX(2);
+                    anchorPane1.setStyle("-fx-background-color:white;");
+                    anchorPane1.getChildren().add(writeBtn);
+                    anchorPane1.getChildren().add(cancelBtn);
+                    writeBtn.setStyle("-fx-background-color: #D5D5D5;"+
+                            "-fx-border-color: #C4C4C4;"+
+                            "-fx-border-radius:0;"+
+                            "-fx-border-style:solid;"+
+                            "-fx-border-width:1px;");
+                    writeBtn.setPrefSize(90,15);
+                    writeBtn.setLayoutX(100);
+                    writeBtn.setLayoutY(12);
+                    cancelBtn.setStyle("-fx-background-color: #D5D5D5;"+
+                            "-fx-border-color: #C4C4C4;"+
+                            "-fx-border-radius:0;"+
+                            "-fx-border-style:solid;"+
+                            "-fx-border-width:1px;");
+                    cancelBtn.setPrefSize(90,15);
+                    cancelBtn.setLayoutX(300);
+                    cancelBtn.setLayoutY(12);
+                    ImageView imageView = new ImageView();
+                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    Label label1=new Label("",imageView);
+                    label1.setLayoutX(470);
+                    label1.setLayoutY(7);
+                    anchorPane.getChildren().add(textArea);
+                    anchorPane.getChildren().add(label1);
+                    anchorPane.getChildren().add(anchorPane1);
+                    anchorPane.setStyle("-fx-background-color:#666666;" +         //设置背景颜色
+                            "-fx-text-fill:#FF0000;" +        //设置字体颜色
+                            "-fx-border-radius:0;" +         //设置边框圆角
+                            "-fx-border-style:solid;"+      //设置边框样式
+                            "-fx-border-width:2;"
+                    );
+                    textArea.setStyle("-fx-background-color:white;" +         //设置背景颜色
+                            "-fx-text-fill:black;" +//设置字体颜色
+                            "-fx-font-size:20;"+
+                            "-fx-border-radius:0;" +         //设置边框圆角
+                            "-fx-border-color:black;"+     //设置边框颜色
+                            "-fx-border-style:solid;"+      //设置边框样式
+                            "-fx-border-width:2;"         //设置边框宽度
+                    );
+                    Stage dialogStage = new Stage();
+                    Scene dialogScene = new Scene(anchorPane, 500, 350);
+                    dialogStage.setScene(dialogScene);
+                    dialogStage.setTitle(file.getFileName());
+                    dialogStage.initStyle(StageStyle.UNDECORATED);
+                    dialogStage.show();
+                    label1.setOnMouseClicked(mouseEvent -> {
+                        if(mouseEvent.getClickCount()==1)
+                            dialogStage.close();
+                    });
+                    dialogStage.show();
                     writeBtn.setOnAction(e -> {
 //                        重命名
                         String name = textArea.getText();
@@ -837,10 +984,25 @@ public class FileXMLController implements Initializable {
                         setFilePane(path);
                         dialogStage.close();
                     });
-                    vBox.getChildren().addAll(textArea, writeBtn);
-                    Scene dialogScene = new Scene(vBox, 40, 60);
-                    dialogStage.setScene(dialogScene);
-                    dialogStage.show();
+                    cancelBtn.setOnAction(e -> {
+                        dialogStage.close();
+                    });
+
+//                    监听窗体关闭
+                    dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+                            System.out.println("移除打开文件序列");
+//                    移除打开文件序列
+                            fatService.removeOpenFile(fat);
+//                    刷新文件打开状态表
+                            setFileStatue();
+                        }
+                    });
+
+
+
+
                 } else if (event.getTarget().equals(M4)) {
 //                    删除文件
                     int index = fatService.delete(fat);
