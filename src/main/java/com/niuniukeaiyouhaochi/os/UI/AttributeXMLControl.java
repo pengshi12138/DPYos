@@ -104,7 +104,7 @@ public class AttributeXMLControl implements Initializable {
 //            文件
             File file = (File) fat.getObject();
             fileName.setText(file.getFileName());
-            fileImg.setImage(new Image("/img/filePic.png"));
+            fileImg.setImage(new Image("/img/folderPic.png"));
             fileStyle.setText("文件夹");
             fileLocation.setText(file.getLocation());
             size.setText(file.getSize() + "B");

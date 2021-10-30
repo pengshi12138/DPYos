@@ -2,10 +2,12 @@ package com.niuniukeaiyouhaochi.os.util;
 
 public class FileSystemUtil {
     public static int num = 5;
-    public static String folderPath = "/img/folder.jpg";
-    public static String filePath = "/img/file.jpg";
+    public static String folderPath = "C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\folder.png";
+    public static String folderTreePath = "C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\folderPic.png";
+    public static String filePath = "C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\filePic.png";
     public static String diskPath = "/img/diskPic.jpg";
-    public static String imgPath = "/img/img.jpg";
+    public static String delPath = "C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\del.png";
+    public static String warnPath ="C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\warn.png";
     //    表示该磁盘块已结束
     public static int END = 255;
 //    表示该磁盘块空闲

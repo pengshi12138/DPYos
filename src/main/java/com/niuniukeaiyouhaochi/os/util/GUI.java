@@ -18,8 +18,8 @@ public class GUI {
         anchorPane.setStyle("-fx-background-color: #eeeeee;");
         ImageView imageView = new ImageView();
         ImageView imageView1 = new ImageView();
-        imageView.setImage(new Image("C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\warn.png", 25, 25, false, false));
-        imageView1.setImage(new Image("C:\\Users\\22806\\Desktop\\java\\DPYos\\src\\main\\resources\\img\\del.png", 10, 10, false, false));
+        imageView.setImage(new Image(FileSystemUtil.warnPath, 25, 25, false, false));
+        imageView1.setImage(new Image(FileSystemUtil.delPath, 10, 10, false, false));
         Label label1=new Label("",imageView1);
         Label label = new Label();
         label.setText(context);
