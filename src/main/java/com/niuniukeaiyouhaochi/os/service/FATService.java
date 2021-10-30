@@ -527,7 +527,7 @@ public class FATService {
     }
 
     /**
-     * 根据TreeItem来获取对应的FAT
+     * 根据TreeItem来获取对应的Folder FAT
      * */
     public FAT getTreeItemFAT(TreeItem<String> treeItem){
         for (int i = 0; i < myFAT.length; i++) {

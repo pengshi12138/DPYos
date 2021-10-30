@@ -85,7 +85,7 @@ public class AttributeXMLControl implements Initializable {
 //            文件夹
             Folder folder = (Folder) fat.getObject();
             fileName.setText(folder.getFolderName());
-            fileImg.setImage(new Image("/img/folderPic.png"));
+            fileImg.setImage(new Image(FileSystemUtil.folderPath));
             fileStyle.setText("文件夹");
             fileLocation.setText(folder.getLocation());
             size.setText(fatService.getFolderSize(folder) + "B");
@@ -104,7 +104,7 @@ public class AttributeXMLControl implements Initializable {
 //            文件
             File file = (File) fat.getObject();
             fileName.setText(file.getFileName());
-            fileImg.setImage(new Image("/img/folderPic.png"));
+            fileImg.setImage(new Image(FileSystemUtil.filePath));
             fileStyle.setText("文件夹");
             fileLocation.setText(file.getLocation());
             size.setText(file.getSize() + "B");

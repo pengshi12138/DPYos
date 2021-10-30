@@ -1,5 +1,6 @@
 package com.niuniukeaiyouhaochi.os.util;
 
+import com.niuniukeaiyouhaochi.os.Listener.DragUtil;
 import javafx.scene.Scene;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -38,6 +39,8 @@ public class GUI {
         imageView.setLayoutY(10);
         dialogStage.setScene(dialogScene);
         dialogStage.initStyle(StageStyle.UNDECORATED);
+        //                    窗体拖动
+        DragUtil.addDragListener(dialogStage,anchorPane);
         dialogStage.show();
         label1.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getClickCount()==1)

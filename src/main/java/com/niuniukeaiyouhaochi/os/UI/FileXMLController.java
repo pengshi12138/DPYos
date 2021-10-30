@@ -52,6 +52,8 @@ public class FileXMLController implements Initializable {
     private static ContextMenu PaneContextMenu;
    //    右击书目录菜单
    private static ContextMenu TreeContextMenu;
+   //   单击标志
+    private static Button flagButton;
     @FXML
     Button filePaneFileBtn;
     @FXML
@@ -254,7 +256,7 @@ public class FileXMLController implements Initializable {
                     name = folder.getFolderName();
                     System.out.println("新建文件夹成功！ 文件夹名：" + name);
 //                    设置文件树结构
-                    Node folderPicIcon = new ImageView(new Image(getClass().getResourceAsStream("/img/folderPic.png"), 18, 18, false, false));
+                    Node folderPicIcon = new ImageView(new Image(getClass().getResourceAsStream(FileSystemUtil.folderTreePath), 18, 18, false, false));
                     TreeItem<String> treeFolderItem = new TreeItem<String>(name, folderPicIcon);
                     currentTreeItem.getChildren().add(treeFolderItem);
 //                    设置树结构
@@ -307,7 +309,7 @@ public class FileXMLController implements Initializable {
                     name = folder.getFolderName();
                     System.out.println("新建文件夹成功！ 文件夹名：" + name);
 //                    设置文件树结构
-                    Node folderPicIcon = new ImageView(new Image(getClass().getResourceAsStream("/img/folderPic.png"), 18, 18, false, false));
+                    Node folderPicIcon = new ImageView(new Image(getClass().getResourceAsStream(FileSystemUtil.folderTreePath), 18, 18, false, false));
                     TreeItem<String> treeFolderItem = new TreeItem<String>(name, folderPicIcon);
                     rightClickTreeItem.getChildren().add(treeFolderItem);
 //                    设置树结构
@@ -331,7 +333,6 @@ public class FileXMLController implements Initializable {
                         return;
                     }
                     TreeItem<String> parentItem = rightClickTreeItem.getParent();
-
                     parentItem.getChildren().remove(rightClickTreeItem);
 //                    把对应的颜色置为未使用
                     int colorIndex = folder.getColorIndex();
@@ -386,7 +387,7 @@ public class FileXMLController implements Initializable {
                     cancelBtn.setLayoutX(300);
                     cancelBtn.setLayoutY(12);
                     ImageView imageView = new ImageView();
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(FileSystemUtil.delPath), 17, 17, false, false));
                     Label label1=new Label("",imageView);
                     label1.setLayoutX(470);
                     label1.setLayoutY(7);
@@ -412,6 +413,8 @@ public class FileXMLController implements Initializable {
                     dialogStage.setScene(dialogScene);
                     dialogStage.initStyle(StageStyle.UNDECORATED);
                     dialogStage.show();
+//                    窗体拖动
+                    DragUtil.addDragListener(dialogStage,anchorPane);
                     label1.setOnMouseClicked(mouseEvent -> {
                         if(mouseEvent.getClickCount()==1)
                             dialogStage.close();
@@ -425,7 +428,13 @@ public class FileXMLController implements Initializable {
                     writeBtn.setOnAction(e -> {
 //                        重命名
                         String folderName = textArea.getText();
-                        if (fatService.isFolderNameSame(rightClickTreePath, folderName)) {
+                        System.out.println(rightClickTreePath+" "+folderName);
+                        FAT fat1 = fatService.getTreeItemFAT(rightClickTreeItem.getParent());
+                        String location ="D:";
+                        if(fat1!=null){
+                            location=((Folder)fat1.getObject()).getLocation();
+                        }
+                        if (fatService.isFolderNameSame(location, folderName)) {
                             GUI.contentOutGUI("名字重复！");
                             dialogStage.close();
                             return;
@@ -437,9 +446,13 @@ public class FileXMLController implements Initializable {
                         fatService.modifyLocation(rightClickTreePath, newName);
                         folder.setFolderName(folderName);
 //                       刷新面板图标内容
+                        TreeItem<String> parentItem = rightClickTreeItem.getParent();
+                        String folderLocation = folder.getLocation();
+                        if(folderLocation.equals(path)){
+                            setFilePane(path);
+                        }
                         dialogStage.close();
                     });
-
                 }
 
 //                初始化盘块号状态
@@ -514,7 +527,7 @@ public class FileXMLController implements Initializable {
             }
             Stage dialogStage = new Stage();
             Scene dialogScene = new Scene(root, 387, 504);
-            dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/folderPic.png"), 10, 10, false, false));
+            dialogStage.getIcons().add(new Image(getClass().getResourceAsStream(FileSystemUtil.folderPath), 10, 10, false, false));
             dialogStage.setScene(dialogScene);
             dialogStage.show();
 //                    监听窗体关闭
@@ -537,7 +550,7 @@ public class FileXMLController implements Initializable {
             }
             Stage dialogStage = new Stage();
             Scene dialogScene = new Scene(root, 387, 504);
-            dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/folderPic.png"), 10, 10, false, false));
+            dialogStage.getIcons().add(new Image(getClass().getResourceAsStream(FileSystemUtil.filePath), 10, 10, false, false));
             dialogStage.setScene(dialogScene);
             dialogStage.show();
 //                    监听窗体关闭
@@ -588,7 +601,10 @@ public class FileXMLController implements Initializable {
                 double x = event.getScreenX();
                 double y = event.getScreenY();
                 PaneContextMenu.show(filePane, x, y);
-            } else {
+            } else{
+                if(!(flagButton==null)){
+                    flagButton.setStyle("-fx-background-color:white");
+                }
                 PaneContextMenu.hide();
             }
         });
@@ -604,7 +620,8 @@ public class FileXMLController implements Initializable {
 //             文件夹
             if (fatList.get(i).getType() == FileSystemUtil.FOLDER) {
                 name = ((Folder) fatList.get(i).getObject()).getFolderName();
-                ImageView folderIcon = new ImageView(new Image(FileSystemUtil.folderPath, 80, 80, false, false));
+
+                ImageView folderIcon = new ImageView(new Image(getClass().getResourceAsStream(FileSystemUtil.folderPath), 80, 80, false, false));
                 Label labelItem = new Label(name, folderIcon);
                 labelItem.setWrapText(true);
                 labelItem.setPrefWidth(120);
@@ -626,7 +643,8 @@ public class FileXMLController implements Initializable {
             } else {
 //                文件
                 name = ((File) fatList.get(i).getObject()).getFileName();
-                ImageView fileIcon = new ImageView(new Image(FileSystemUtil.filePath, 80, 80, false, false));
+
+                ImageView fileIcon = new ImageView(new Image(getClass().getResourceAsStream(FileSystemUtil.filePath), 80, 80, false, false));
                 Label labelItem = new Label(name, fileIcon);
                 labelItem.setWrapText(true);
                 labelItem.setPrefWidth(120);
@@ -710,7 +728,7 @@ public class FileXMLController implements Initializable {
                     cancelBtn.setLayoutX(300);
                     cancelBtn.setLayoutY(12);
                     ImageView imageView = new ImageView();
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(FileSystemUtil.delPath), 17, 17, false, false));
                     Label label1=new Label("",imageView);
                     label1.setLayoutX(470);
                     label1.setLayoutY(7);
@@ -736,6 +754,8 @@ public class FileXMLController implements Initializable {
                     dialogStage.setScene(dialogScene);
                     dialogStage.initStyle(StageStyle.UNDECORATED);
                     dialogStage.show();
+//                    窗体拖动
+                    DragUtil.addDragListener(dialogStage,anchorPane);
                     label1.setOnMouseClicked(mouseEvent -> {
                         if(mouseEvent.getClickCount()==1)
                             dialogStage.close();
@@ -794,7 +814,7 @@ public class FileXMLController implements Initializable {
                     }
                     Stage dialogStage = new Stage();
                     Scene dialogScene = new Scene(root, 387, 504);
-                    dialogStage.getIcons().add(new Image(getClass().getResourceAsStream("/img/folderPic.png"), 10, 10, false, false));
+                    dialogStage.getIcons().add(new Image(getClass().getResourceAsStream(FileSystemUtil.folderPath), 10, 10, false, false));
                     dialogStage.setScene(dialogScene);
                     dialogStage.show();
 //                    监听窗体关闭
@@ -823,6 +843,12 @@ public class FileXMLController implements Initializable {
                 setSearchPath();
 //                设置当前树结构对象
                 currentTreeItem = folder.getFolderTreeItem();
+            } else if(event.getClickCount() == 1){
+                if(!(flagButton==null)){
+                    flagButton.setStyle("-fx-background-color:white");
+                }
+                folderPaneFileBtn.setStyle("-fx-background-color:rgba(51,204,255,0.2);");
+                flagButton=folderPaneFileBtn;
             }
         });
     }
@@ -852,7 +878,7 @@ public class FileXMLController implements Initializable {
                     String contentText = file.getContent();
                     AnchorPane anchorPane = new AnchorPane();
                     ImageView imageView = new ImageView();
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(FileSystemUtil.delPath), 17, 17, false, false));
                     Label label = new Label();
                     label.setText(contentText);
                     label.setPrefSize(500,270);
@@ -892,6 +918,8 @@ public class FileXMLController implements Initializable {
                         setFileStatue();
                     });
                     dialogStage.show();
+//                    窗体拖动
+                    DragUtil.addDragListener(dialogStage,anchorPane);
 //                    添加到打开文件序列中
                     fatService.addOpenFile(fat, 0);
 //                    刷新文件打开状态表
@@ -907,7 +935,7 @@ public class FileXMLController implements Initializable {
                         GUI.contentOutGUI("该文件已经打开了，不能重复打开！");
                         return;
                     }
-//                   / 写文件
+//                   写文件
                     TextArea textArea = new TextArea();
                     textArea.setText(file.getContent());
                     textArea.setWrapText(true);
@@ -940,7 +968,7 @@ public class FileXMLController implements Initializable {
                     cancelBtn.setLayoutX(300);
                     cancelBtn.setLayoutY(12);
                     ImageView imageView = new ImageView();
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(FileSystemUtil.delPath), 17, 17, false, false));
                     Label label1=new Label("",imageView);
                     label1.setLayoutX(470);
                     label1.setLayoutY(7);
@@ -967,6 +995,8 @@ public class FileXMLController implements Initializable {
                     dialogStage.setTitle(file.getFileName());
                     dialogStage.initStyle(StageStyle.UNDECORATED);
                     dialogStage.show();
+//                    窗体拖动
+                    DragUtil.addDragListener(dialogStage,anchorPane);
                     label1.setOnMouseClicked(mouseEvent -> {
                         if(mouseEvent.getClickCount()==1)
                             dialogStage.close();
@@ -975,6 +1005,8 @@ public class FileXMLController implements Initializable {
 //                    刷新文件打开状态表
                         setFileStatue();
                     });
+//                    窗体拖动
+                    DragUtil.addDragListener(dialogStage,anchorPane);
                     dialogStage.show();
 //                    添加到打开文件序列中
                     fatService.addOpenFile(fat, 0);
@@ -1052,7 +1084,7 @@ public class FileXMLController implements Initializable {
                     cancelBtn.setLayoutX(300);
                     cancelBtn.setLayoutY(12);
                     ImageView imageView = new ImageView();
-                    imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(FileSystemUtil.delPath), 17, 17, false, false));
                     Label label1=new Label("",imageView);
                     label1.setLayoutX(470);
                     label1.setLayoutY(7);
@@ -1079,6 +1111,8 @@ public class FileXMLController implements Initializable {
                     dialogStage.setTitle(file.getFileName());
                     dialogStage.initStyle(StageStyle.UNDECORATED);
                     dialogStage.show();
+//                    窗体拖动
+                    DragUtil.addDragListener(dialogStage,anchorPane);
                     label1.setOnMouseClicked(mouseEvent -> {
                         if(mouseEvent.getClickCount()==1)
                             dialogStage.close();
@@ -1161,7 +1195,7 @@ public class FileXMLController implements Initializable {
                 String contentText = file.getContent();
                 AnchorPane anchorPane = new AnchorPane();
                 ImageView imageView = new ImageView();
-                imageView.setImage(new Image(getClass().getResourceAsStream("/img/del.png"), 17, 17, false, false));
+                imageView.setImage(new Image(getClass().getResourceAsStream(FileSystemUtil.delPath), 17, 17, false, false));
                 Label label = new Label();
                 label.setText(contentText);
                 label.setPrefSize(500,270);
@@ -1201,18 +1235,25 @@ public class FileXMLController implements Initializable {
                     setFileStatue();
                 });
                 dialogStage.show();
+//                    窗体拖动
+                DragUtil.addDragListener(dialogStage,anchorPane);
 //                    添加到打开文件序列中
                 fatService.addOpenFile(fat, 0);
 //                    刷新文件打开状态表
                 setFileStatue();
+            } else if(event.getClickCount() == 1){
+                if(!(flagButton==null)){
+                    flagButton.setStyle("-fx-background-color:white");
+                }
+                filePaneFileBtn.setStyle("-fx-background-color:rgba(51,204,255,0.2);");
+                flagButton=filePaneFileBtn;
             }
-
         });
     }
 
     //      设置树结构
     private void setTree() {
-        Node fileDiskIcon = new ImageView(new Image(getClass().getResourceAsStream("/img/diskPic.png"), 20, 20, false, false));
+        Node fileDiskIcon = new ImageView(new Image(getClass().getResourceAsStream(FileSystemUtil.diskPath), 20, 20, false, false));
         treeDiskItem = new TreeItem<String>("D:", fileDiskIcon);
         currentTreeItem = treeDiskItem;
 //        是否默认打开文件夹
@@ -1247,7 +1288,7 @@ public class FileXMLController implements Initializable {
                         currentTreeItem = treeView.getSelectionModel().getSelectedItem();
 //                        设置当前的路径
                         path = getPath(currentTreeItem);
-                        System.out.println("路径" + path);
+                        System.out.println("单击的路径" + path);
 //                         设置当前路径
                         setSearchPath();
 //                        获取文件树目录点击的路径值，展示该路径下的文件、文件夹内容
@@ -1281,7 +1322,7 @@ public class FileXMLController implements Initializable {
             Folder folder = folderList.get(i);
             String folderName = folder.getFolderName();
             String location1 = folderList.get(i).getLocation() + "\\"+ folderName;
-            Node folderPicIcon = new ImageView(new Image(getClass().getResourceAsStream("/img/folderPic.png"), 18, 18, false, false));
+            Node folderPicIcon = new ImageView(new Image(getClass().getResourceAsStream(FileSystemUtil.folderPath), 18, 18, false, false));
             TreeItem<String> treeFolderItem = new TreeItem<String>(folderName, folderPicIcon);
             treeItem.getChildren().add(treeFolderItem);
 //            递归调用遍历
