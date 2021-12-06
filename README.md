@@ -42,11 +42,26 @@ CPU作为单独的进程，作为一条时间线，CPU是单线程运行，单�
 
    **这个界面很牛逼啊，主要是窗体的阴影啊，花了我一下午找的资料，一定要看啊**
 
-3. xxxx
 
-### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+# 运行的注意事项
+## 1. JDK版本
+
+jdk11以上，里面内置了javafx的相关包
+
+如果出现**使用java命令出现Error: A JNI error has occurred, please check your installation and try again的错误**
+一般是因为
+
+```java
+Exception in thread "main" java.lang.UnsupportedClassVersionError: helloworld has been compiled by a more recent version of the Java Runtime (class file version 54.0), this version of the Java Runtime only recognizes class file versions up to 52.0
+```
+
+应该是jdk版本过低，使用jdk11以上
+
+
+
+## 2. 界面布局提醒
+
+对于初始界面的web项目，由于全屏设置，需要把缩放与布局设置为100% 
+
+具体操作:[如何调整电脑的缩放和显示布局-百度经验 (baidu.com)](
